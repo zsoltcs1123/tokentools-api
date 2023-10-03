@@ -1,27 +1,49 @@
-import pymongo
-from coin import Coin
-from etherscan_scraper import get_creation_block_timestamp
+from coin_dao import CoinDAO
 from time_util import hex_to_datetime
+from birth_card_calculator import get_birth_card
+from etherscan_scraper import get_creation_block_timestamp
+from coin_metadata import CoinMetadata
 
-MONGO_URL = "mongodb://localhost:27017/"
-DB_NAME = "tokentools"
-COINS_COLLECTION_NAME = "coins"
+coins = [
+    "UNIBOT",
+    "AIX",
+    "UNI",
+    "PEPE",
+    "MBOT",
+    "BBANK",
+    "IBIT",
+    "GENE",
+    "PLANET",
+    "PAAL",
+    "PROPHET",
+    "HOT",
+    "0X0",
+    "GODBOT",
+    "AIMBOT"
+]
 
+
+dao = CoinDAO()
+
+for symbol in coins:
     
-client = pymongo.MongoClient(MONGO_URL)
-db = client[DB_NAME]
-collection = db[COINS_COLLECTION_NAME]
+    matching_coins = dao.query_coins_by_symbol(symbol)
+    
+    for coin in matching_coins:
+        
+        if not 'ethereum' in coin.platforms:
+            continue        
+    
+        ts_hex = get_creation_block_timestamp(coin.platforms['ethereum'])
 
-def get_first_10_coins():
-    return collection.find().limit(10)
+        birth_date = hex_to_datetime(ts_hex)
+        birth_card = get_birth_card(birth_date.date())
+        birth_card_str = f'{birth_card[0]}/{birth_card[1]} - {birth_card[2]}'
 
-def print_coin_count():
-    return collection.count_documents({})
+        print(birth_date)
+        print(birth_card_str)
 
-def query_coins_by_symbol(symbol):
-    return [Coin(coin) for coin in collection.find({'symbol': symbol})]
+        metadata = CoinMetadata(coin.object_id, coin.symbol, birth_date, birth_card_str)
+        dao.save_coin_metadata(metadata)
+        print(f'{symbol} metadata saved.')
 
-res = query_coins_by_symbol('eth')[0]
-ts_hex = get_creation_block_timestamp(res.platforms['ethereum'])
-
-print(hex_to_datetime(ts_hex))
