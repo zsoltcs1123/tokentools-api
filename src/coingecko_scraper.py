@@ -5,21 +5,7 @@ from etherscan_scraper import get_creation_block_timestamp
 from coin_metadata import CoinMetadata
 
 coins = [
-    "UNIBOT",
-    "AIX",
-    "UNI",
-    "PEPE",
-    "MBOT",
-    "BBANK",
-    "IBIT",
-    "GENE",
-    "PLANET",
-    "PAAL",
-    "PROPHET",
-    "HOT",
-    "0X0",
-    "GODBOT",
-    "AIMBOT"
+    "RIO"
 ]
 
 
