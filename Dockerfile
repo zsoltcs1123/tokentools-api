@@ -33,4 +33,4 @@ COPY --from=builder /app/.venv ./.venv
 COPY --chown=appuser:appuser tokenapi ./tokenapi
 
 ENTRYPOINT ["uvicorn"]
-CMD ["tokenapi.app.main:app", "--host", "0.0.0.0", "--port", "8001", "--log-config", "tokenapi/app/logger_conf.yaml"]
+CMD ["tokenapi.main:app", "--host", "0.0.0.0", "--port", "8001", "--log-config", "tokenapi/logger_conf.yaml"]

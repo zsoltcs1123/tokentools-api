@@ -1,4 +1,5 @@
 import os
+
 import requests
 
 API_KEY = os.getenv("ETHERSCAN_API_KEY")

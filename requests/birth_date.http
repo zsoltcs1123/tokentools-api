@@ -1,1 +1,4 @@
-GET http://localhost:8001/birthdate?symbol=aix
+GET http://localhost:8000/birthdate?contract_address=0x8edc6f7d2f23c10653972e611f707ce0562d61b1
+
+###
+GET http://localhost:8001/birthdate?contract_address=0x8edc6f7d2f23c10653972e611f707ce0562d61b1
