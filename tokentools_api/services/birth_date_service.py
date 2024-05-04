@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from tokenapi.services.etherscan_scraper import get_creation_block_timestamp
-from tokenapi.util.time_util import hex_to_datetime_utc
+from tokentools_api.services.etherscan_scraper import get_creation_block_timestamp
+from tokentools_api.util.time_util import hex_to_datetime_utc
 
 
 def get_birth_date(contract_address: str) -> datetime:

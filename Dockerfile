@@ -30,7 +30,7 @@ WORKDIR /app
 USER appuser
 COPY --from=builder /app/.venv ./.venv
 
-COPY --chown=appuser:appuser tokenapi ./tokenapi
+COPY --chown=appuser:appuser tokentools_api ./tokentools_api
 
 ENTRYPOINT ["uvicorn"]
-CMD ["tokenapi.main:app", "--host", "0.0.0.0", "--port", "8001", "--log-config", "tokenapi/logger_conf.yaml"]
+CMD ["tokentools_api.main:app", "--host", "0.0.0.0", "--port", "8001", "--log-config", "tokentools_api/logger_conf.yaml"]
