@@ -1,14 +1,16 @@
 import logging
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
+from fastapi.exception_handlers import http_exception_handler
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from tokentools_api.services import birth_date_service
+from tokentools_api.routes import token_data
 
 load_dotenv()
 
-app = FastAPI()
+app = FastAPI(root_path="/api/v1")
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -29,22 +31,10 @@ app.add_middleware(
 )
 
 
-@app.get("/birthdate")
-async def get_birth_date(contract_address: str):
-    try:
-        birth_date_value = birth_date_service.get_birth_date(contract_address)
-        return {"contract_address": contract_address, "birth_date": birth_date_value}
-    except Exception as e:
-        logging.error(
-            f"Error getting birth date for contract address {contract_address}: {e}"
-        )
-        raise HTTPException(status_code=500, detail=str(e))
+@app.exception_handler(StarletteHTTPException)
+async def custom_http_exception_handler(request, exc):
+    logging.error(f"Error handling request: {request.method} {request.url} {exc}")
+    return await http_exception_handler(request, exc)
 
 
-# if __name__ == "__main__":
-#     uvicorn.run(
-#         app,
-#         host="0.0.0.0",
-#         port=8001,
-#         log_config="tokenapi/app/logger_conf.yaml",
-#     )
+app.include_router(token_data.router)
